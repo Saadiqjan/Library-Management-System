@@ -1,14 +1,12 @@
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
 
-public class SearchPanel extends JPanel
+public class AdminPanel extends JPanel
 {
     private JPanel mainPanel;
     private CardLayout cardLayout;
 
-    private JTextField searchBar;
-
-    public SearchPanel(JPanel mainPanel, CardLayout cardLayout)
+    public AdminPanel(JPanel mainPanel, CardLayout cardLayout)
     {
         this.mainPanel = mainPanel;
         this.cardLayout = cardLayout;

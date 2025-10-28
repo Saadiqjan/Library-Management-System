@@ -8,6 +8,7 @@ public class MainFrame extends JFrame
 
     private MenuPanel menuPanel;
     private SearchPanel searchPanel;
+    private AdminPanel adminPanel;
 
     public MainFrame() 
     {
@@ -20,9 +21,11 @@ public class MainFrame extends JFrame
 
         menuPanel = new MenuPanel(mainPanel, cardLayout);
         searchPanel = new SearchPanel(mainPanel, cardLayout);
+        adminPanel = new AdminPanel(mainPanel, cardLayout);
 
         mainPanel.add(menuPanel, "Menu");
         mainPanel.add(searchPanel, "Search");
+        mainPanel.add(adminPanel, "Admin");
 
         add(mainPanel);
     }

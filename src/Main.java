@@ -2,6 +2,8 @@ import java.sql.*;
 
 public class Main
 {
+    private static MainFrame mainFrame;
+
     public static void main(String[] args)
     {
         try (Connection conn = db.DatabaseConnection.getConnection()) 
@@ -17,6 +19,7 @@ public class Main
             e.printStackTrace();
         }
 
-        new MainFrame().setVisible(true);
+        mainFrame = new MainFrame();
+        mainFrame.setVisible(true);
     }
 }
