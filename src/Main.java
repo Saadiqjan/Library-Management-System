@@ -16,5 +16,7 @@ public class Main
         {
             e.printStackTrace();
         }
+
+        new MainFrame().setVisible(true);
     }
 }
