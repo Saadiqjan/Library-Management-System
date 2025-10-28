@@ -2,7 +2,7 @@ package db;
 
 import java.io.*;
 import java.sql.*;
-import java.util.Properties;
+import java.util.*;
 
 public class DatabaseConnection 
 {
