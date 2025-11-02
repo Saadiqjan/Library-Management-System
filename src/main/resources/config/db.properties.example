@@ -1,0 +1,4 @@
+# Database connection settings - fill in your own
+db.url=jdbc:mysql://localhost:3306/yourdatabase
+db.user=yourusername
+db.password=yourpassword
