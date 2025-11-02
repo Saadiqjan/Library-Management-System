@@ -6,7 +6,7 @@ import java.util.*;
 
 public class DatabaseConnection 
 {
-    private static final String CONFIG_FILE = "config/db.properties";
+    private static final String CONFIG_FILE = "resources/config/db.properties";
 
     public static Connection getConnection() 
     {

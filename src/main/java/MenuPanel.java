@@ -17,6 +17,8 @@ public class MenuPanel extends JPanel
         this.mainPanel = mainPanel;
         this.cardLayout = cardLayout;
 
+        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+
         search = new JButton("Search");
         search.setBounds(550, 300, 300, 100);
         search.addActionListener(new SearchListener());
