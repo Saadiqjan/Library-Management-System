@@ -1,0 +1,52 @@
+# ===========================
+# Maven
+# ===========================
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+
+# ===========================
+# Java
+# ===========================
+*.class
+*.jar
+*.war
+*.ear
+
+# ===========================
+# VS Code
+# ===========================
+.vscode/
+.history/
+
+# ===========================
+# IntelliJ IDEA
+# ===========================
+*.iml
+.idea/
+out/
+
+# ===========================
+# Eclipse
+# ===========================
+*.classpath
+*.project
+*.settings/
+
+# ===========================
+# Logs and temp files
+# ===========================
+*.log
+*.tmp
+
+# ===========================
+# OS-specific
+# ===========================
+.DS_Store
+Thumbs.db
+
+# ===========================
+# Sensitive config files
+# ===========================
+# Your database configuration
+src/main/resources/config/db.properties
