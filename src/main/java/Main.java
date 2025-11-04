@@ -33,6 +33,7 @@ public class Main
         SwingUtilities.invokeLater(() -> {
             mainFrame = new MainFrame();
             mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            mainFrame.pack();
             mainFrame.setVisible(true);
         });   
     }

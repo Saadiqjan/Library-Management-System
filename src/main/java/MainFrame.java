@@ -3,6 +3,11 @@ import javax.swing.*;
 
 public class MainFrame extends JFrame
 {
+    public static final Color BACKGROUND_COLOR = new Color(201, 173, 167);
+    public static final Color LABEL_COLOR = new Color(34, 34, 59);
+    public static final Color BUTTON_COLOR = new Color(242, 233, 228);
+    public static final Color BUTTON_TEXT_COLOR = new Color(74, 78, 105);
+
     private JPanel mainPanel;
     private CardLayout cardLayout;
 

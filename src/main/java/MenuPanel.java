@@ -1,12 +1,14 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+
 import javax.swing.*;
 
 public class MenuPanel extends JPanel 
 {
     private JPanel mainPanel;
     private CardLayout cardLayout;
+
+    private JLabel title;
 
     private JButton search;
     private JButton adminLogin;
@@ -17,23 +19,45 @@ public class MenuPanel extends JPanel
         this.mainPanel = mainPanel;
         this.cardLayout = cardLayout;
 
-        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBorder(BorderFactory.createEmptyBorder(40, 100, 40, 100));
+        setBackground(MainFrame.BACKGROUND_COLOR);
+
+        title = new JLabel("Library Management System");
+        title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        title.setFont(new Font("Segoe UI", Font.BOLD, 44));
+        title.setForeground(MainFrame.LABEL_COLOR);
 
         search = new JButton("Search");
-        search.setBounds(550, 300, 300, 100);
         search.addActionListener(new SearchListener());
 
         adminLogin = new JButton("Admin Login");
-        adminLogin.setBounds(550, 450, 300, 100);
         adminLogin.addActionListener(new AdminLoginListener());
         
         exit = new JButton("Exit");
-        exit.setBounds(550, 600, 300, 100);
         exit.addActionListener(new ExitListener());
 
+        add(title);
+        add(Box.createRigidArea(new Dimension(0, 40)));
         add(search);
+        add(Box.createRigidArea(new Dimension(0, 40)));
         add(adminLogin);
+        add(Box.createRigidArea(new Dimension(0, 40)));
         add(exit);
+
+        for (Component comp : getComponents())
+        {
+            if (comp instanceof JButton)
+            {
+                JButton button = (JButton) comp;
+
+                button.setFont(new Font("Segoe UI", Font.PLAIN, 24));
+                button.setAlignmentX(JButton.CENTER_ALIGNMENT);
+                button.setBackground(MainFrame.BUTTON_COLOR);
+                button.setForeground(MainFrame.BUTTON_TEXT_COLOR);
+                button.setBorderPainted(false);
+            }
+        }
     }    
 
     public class SearchListener implements ActionListener
