@@ -8,6 +8,9 @@ public class MainFrame extends JFrame
     public static final Color BUTTON_COLOR = new Color(242, 233, 228);
     public static final Color BUTTON_TEXT_COLOR = new Color(74, 78, 105);
 
+    public static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 44);
+    public static final Font BUTTON_FONT = new Font("Segoe UI", Font.PLAIN, 24);
+
     private JPanel mainPanel;
     private CardLayout cardLayout;
 

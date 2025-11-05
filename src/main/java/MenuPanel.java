@@ -25,7 +25,7 @@ public class MenuPanel extends JPanel
 
         title = new JLabel("Library Management System");
         title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-        title.setFont(new Font("Segoe UI", Font.BOLD, 44));
+        title.setFont(MainFrame.TITLE_FONT);
         title.setForeground(MainFrame.LABEL_COLOR);
 
         search = new JButton("Search");
@@ -51,7 +51,7 @@ public class MenuPanel extends JPanel
             {
                 JButton button = (JButton) comp;
 
-                button.setFont(new Font("Segoe UI", Font.PLAIN, 24));
+                button.setFont(MainFrame.BUTTON_FONT);
                 button.setAlignmentX(JButton.CENTER_ALIGNMENT);
                 button.setBackground(MainFrame.BUTTON_COLOR);
                 button.setForeground(MainFrame.BUTTON_TEXT_COLOR);
