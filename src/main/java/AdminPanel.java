@@ -11,5 +11,7 @@ public class AdminPanel extends JPanel
     {
         this.mainPanel = mainPanel;
         this.cardLayout = cardLayout;
+
+        
     }
 }

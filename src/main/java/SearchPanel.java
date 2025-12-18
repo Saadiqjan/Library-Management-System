@@ -1,7 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
-
+import java.sql.*;
 import javax.swing.*;
+import db.DatabaseConnection;
 
 public class SearchPanel extends JPanel
 {
@@ -18,7 +19,8 @@ public class SearchPanel extends JPanel
     private JButton searchButton;
     
     // Store resultPanel's components
-    private JList resultList;
+    private DefaultListModel<String> model = new DefaultListModel<>();
+    private JList<String> resultList;
     private JScrollPane scroll;
 
     public SearchPanel(JPanel mainPanel, CardLayout cardLayout)
@@ -44,14 +46,27 @@ public class SearchPanel extends JPanel
         searchButton.setFont(MainFrame.BUTTON_FONT);
         searchButton.addActionListener(new SearchListener());
 
-        String[] data = {"one", "two", "three", "four", "two", 
-        "three", "four", "two", "three", "four", "two", "three", 
-        "four", "two", "three", "four", "two", "three", "four", 
-        "two", "three", "four", "two", "three", "four", "two", 
-        "three", "four", "two", "three", "four"};
-        resultList = new JList<String>(data);
+        resultList = new JList<String>(model);
+
+        resultList.setCellRenderer((listComp, value, index, isSelected, cellHasFocus) -> {
+            JTextArea area = new JTextArea(value);
+            area.setLineWrap(true);
+            area.setWrapStyleWord(true);
+            area.setOpaque(true);
+            area.setFont(MainFrame.LIST_FONT);
+
+            if (isSelected) 
+            {
+                area.setBackground(listComp.getSelectionBackground());
+                area.setForeground(listComp.getSelectionForeground());
+            }
+
+            return area;
+        });
+
         scroll = new JScrollPane(resultList);
-        resultList.setFont(MainFrame.BUTTON_FONT);
+        scroll.setPreferredSize(new Dimension(400, 500));
+        resultList.setFixedCellHeight(75);
 
         searchBarPanel.add(searchBar);
         searchBarPanel.add(searchButton);
@@ -66,7 +81,30 @@ public class SearchPanel extends JPanel
     {
         public void actionPerformed(ActionEvent e) 
         {
-            System.out.println(searchBar.getText());
+            String search = "%" + searchBar.getText() + "%";
+            String query = "SELECT title, author, isbn FROM books WHERE title LIKE ? OR author LIKE ?";
+
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(query))
+            {
+                pstmt.setString(1, search);
+                pstmt.setString(2, search);
+                ResultSet rs = pstmt.executeQuery();
+                String result = "";
+                model.clear();
+
+                while (rs.next())
+                {
+                    result = rs.getString("title") + " by " + rs.getString("author") + "\nISBN: " + rs.getString("isbn");
+                    model.addElement(result);
+                }
+
+                conn.close();
+            }
+            catch (SQLException se)
+            {
+                se.printStackTrace();
+            }
         }
     }
 }

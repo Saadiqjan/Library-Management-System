@@ -10,6 +10,7 @@ public class MainFrame extends JFrame
 
     public static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 44);
     public static final Font BUTTON_FONT = new Font("Segoe UI", Font.PLAIN, 24);
+    public static final Font LIST_FONT = new Font("Segoe UI", Font.PLAIN, 20);
 
     private JPanel mainPanel;
     private CardLayout cardLayout;
