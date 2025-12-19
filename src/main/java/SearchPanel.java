@@ -19,8 +19,8 @@ public class SearchPanel extends JPanel
     private JButton searchButton;
     
     // Store resultPanel's components
-    private DefaultListModel<String> model = new DefaultListModel<>();
-    private JList<String> resultList;
+    private DefaultListModel<Book> model = new DefaultListModel<>();
+    private JList<Book> resultList;
     private JScrollPane scroll;
 
     public SearchPanel(JPanel mainPanel, CardLayout cardLayout)
@@ -46,10 +46,10 @@ public class SearchPanel extends JPanel
         searchButton.setFont(MainFrame.BUTTON_FONT);
         searchButton.addActionListener(new SearchListener());
 
-        resultList = new JList<String>(model);
+        resultList = new JList<Book>(model);
 
         resultList.setCellRenderer((listComp, value, index, isSelected, cellHasFocus) -> {
-            JTextArea area = new JTextArea(value);
+            JTextArea area = new JTextArea(value.getDisplayString());
             area.setLineWrap(true);
             area.setWrapStyleWord(true);
             area.setOpaque(true);
@@ -67,6 +67,7 @@ public class SearchPanel extends JPanel
         scroll = new JScrollPane(resultList);
         scroll.setPreferredSize(new Dimension(400, 500));
         resultList.setFixedCellHeight(75);
+        resultList.addMouseListener(new ListListener());
 
         searchBarPanel.add(searchBar);
         searchBarPanel.add(searchButton);
@@ -82,7 +83,7 @@ public class SearchPanel extends JPanel
         public void actionPerformed(ActionEvent e) 
         {
             String search = "%" + searchBar.getText() + "%";
-            String query = "SELECT title, author, isbn FROM books WHERE title LIKE ? OR author LIKE ?";
+            String query = "SELECT title, author, isbn, copies_available FROM books WHERE title LIKE ? OR author LIKE ?";
 
             try (Connection conn = DatabaseConnection.getConnection();
                  PreparedStatement pstmt = conn.prepareStatement(query))
@@ -90,12 +91,12 @@ public class SearchPanel extends JPanel
                 pstmt.setString(1, search);
                 pstmt.setString(2, search);
                 ResultSet rs = pstmt.executeQuery();
-                String result = "";
+                Book result;
                 model.clear();
 
                 while (rs.next())
                 {
-                    result = rs.getString("title") + " by " + rs.getString("author") + "\nISBN: " + rs.getString("isbn");
+                    result = new Book(rs.getString("title"), rs.getString("author"), rs.getString("isbn"), rs.getInt("copies_available"));
                     model.addElement(result);
                 }
 
@@ -106,5 +107,20 @@ public class SearchPanel extends JPanel
                 se.printStackTrace();
             }
         }
+    }
+
+    public class ListListener implements MouseListener
+    {
+        @Override
+        public void mouseClicked(MouseEvent e) 
+        {
+            int index = resultList.locationToIndex(e.getPoint());
+            Book selected = resultList.getModel().getElementAt(index);
+        }
+
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {}
+        public void mousePressed(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {} 
     }
 }
