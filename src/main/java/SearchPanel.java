@@ -41,9 +41,13 @@ public class SearchPanel extends JPanel
 
         searchBar = new JTextField(30);
         searchBar.setFont(MainFrame.BUTTON_FONT);
+        searchBar.setBackground(MainFrame.BUTTON_COLOR);
+        searchBar.setForeground(MainFrame.BUTTON_TEXT_COLOR);
 
         searchButton = new JButton("Search");
         searchButton.setFont(MainFrame.BUTTON_FONT);
+        searchButton.setBackground(MainFrame.BUTTON_COLOR);
+        searchButton.setForeground(MainFrame.BUTTON_TEXT_COLOR);
         searchButton.addActionListener(new SearchListener());
 
         resultList = new JList<Book>(model);
