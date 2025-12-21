@@ -1,6 +1,9 @@
 import javax.swing.*;
+import db.DatabaseConnection;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
+import java.util.*;
 
 public class AdminPanel extends JPanel
 {
@@ -9,6 +12,19 @@ public class AdminPanel extends JPanel
 
     private CardLayout formLayout;
     private JPanel formPanel;
+
+    private JTextField titleField;
+    private JTextField authorField;
+    private JTextField isbnField;
+    private JTextField copiesField;
+
+    private JTextField isbnRemField;
+
+    private JTextField nameField;
+    private JTextField emailField;
+    private JTextField phoneField;
+
+    private JTextField emailRemField;
 
     public AdminPanel(JPanel mainPanel, CardLayout cardLayout)
     {
@@ -92,9 +108,10 @@ public class AdminPanel extends JPanel
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.anchor = GridBagConstraints.WEST;
 
-        JTextField titleField = new JTextField(20);
-        JTextField authorField = new JTextField(20);
-        JTextField isbnField = new JTextField(20);
+        titleField = new JTextField(20);
+        authorField = new JTextField(20);
+        isbnField = new JTextField(20);
+        copiesField = new JTextField(10);
 
         gbc.gridx = 0; gbc.gridy = 0;
         panel.add(new JLabel("Title:"), gbc);
@@ -111,10 +128,16 @@ public class AdminPanel extends JPanel
         gbc.gridx = 1;
         panel.add(isbnField, gbc);
 
+        gbc.gridx = 0; gbc.gridy++;
+        panel.add(new JLabel("Copies Available:"), gbc);
+        gbc.gridx = 1;
+        panel.add(copiesField, gbc);
+
         JButton submit = new JButton("Add Book");
         gbc.gridx = 1; gbc.gridy++;
         gbc.anchor = GridBagConstraints.EAST;
         panel.add(submit, gbc);
+        submit.addActionListener(e -> addBook());
 
         for (Component comp : panel.getComponents())
         {
@@ -135,17 +158,18 @@ public class AdminPanel extends JPanel
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.anchor = GridBagConstraints.WEST;
 
-        JTextField isbnField = new JTextField(20);
+        isbnRemField = new JTextField(20);
 
         gbc.gridx = 0; gbc.gridy = 0;
         panel.add(new JLabel("ISBN:"), gbc);
         gbc.gridx = 1;
-        panel.add(isbnField, gbc);
+        panel.add(isbnRemField, gbc);
 
         JButton submit = new JButton("Remove Book");
         gbc.gridx = 1; gbc.gridy++;
         gbc.anchor = GridBagConstraints.EAST;
         panel.add(submit, gbc);
+        submit.addActionListener(e -> removeBook());
 
         for (Component comp : panel.getComponents()) {
             comp.setFont(MainFrame.BUTTON_FONT);
@@ -165,8 +189,9 @@ public class AdminPanel extends JPanel
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.anchor = GridBagConstraints.WEST;
 
-        JTextField nameField = new JTextField(20);
-        JTextField emailField = new JTextField(20);
+        nameField = new JTextField(20);
+        emailField = new JTextField(20);
+        phoneField = new JTextField(20);
 
         gbc.gridx = 0; gbc.gridy = 0;
         panel.add(new JLabel("Name:"), gbc);
@@ -178,10 +203,16 @@ public class AdminPanel extends JPanel
         gbc.gridx = 1;
         panel.add(emailField, gbc);
 
+        gbc.gridx = 0; gbc.gridy++;
+        panel.add(new JLabel("Phone:"), gbc);
+        gbc.gridx = 1;
+        panel.add(phoneField, gbc);
+
         JButton submit = new JButton("Add Member");
         gbc.gridx = 1; gbc.gridy++;
         gbc.anchor = GridBagConstraints.EAST;
         panel.add(submit, gbc);
+        submit.addActionListener(e -> addMember());
 
         for (Component comp : panel.getComponents()) {
             comp.setFont(MainFrame.BUTTON_FONT);
@@ -201,17 +232,18 @@ public class AdminPanel extends JPanel
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.anchor = GridBagConstraints.WEST;
 
-        JTextField emailField = new JTextField(20);
+        emailRemField = new JTextField(20);
 
         gbc.gridx = 0; gbc.gridy = 0;
         panel.add(new JLabel("Email:"), gbc);
         gbc.gridx = 1;
-        panel.add(emailField, gbc);
+        panel.add(emailRemField, gbc);
 
         JButton submit = new JButton("Remove Member");
         gbc.gridx = 1; gbc.gridy++;
         gbc.anchor = GridBagConstraints.EAST;
         panel.add(submit, gbc);
+        submit.addActionListener(e -> removeMember());
 
         for (Component comp : panel.getComponents()) {
             comp.setFont(MainFrame.BUTTON_FONT);
@@ -220,5 +252,137 @@ public class AdminPanel extends JPanel
         }
 
         return panel;
+    }
+
+    private void addBook()
+    {
+        String query = "INSERT INTO books (title, author, isbn, copies_available) values (?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(query))
+        {
+            String title = titleField.getText().trim();
+            String author = authorField.getText().trim();
+            String isbn = isbnField.getText().trim();
+            int copies_available = Integer.parseInt(copiesField.getText().trim());
+
+            if (title.isEmpty() || author.isEmpty() || isbn.isEmpty())
+            {
+                throw new Exception("Empty fields");
+            }
+
+            pstmt.setString(1, title);
+            pstmt.setString(2, author);
+            pstmt.setString(3, isbn);
+            pstmt.setInt(4, copies_available);
+
+            pstmt.executeUpdate();
+
+            conn.close();
+        }
+        catch (SQLException se)
+        {
+            se.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void removeBook()
+    {
+        String query = "REMOVE FROM books WHERE isbn=?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query))
+        {
+            String isbn = isbnRemField.getText().trim();
+
+            if (isbn.isEmpty())
+            {
+                throw new Exception("Empty FIelds");
+            }
+
+            pstmt.setString(1, isbn);
+
+            pstmt.executeUpdate();
+
+            conn.close();
+        }
+        catch (SQLException se)
+        {
+            se.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void addMember()
+    {
+        String query = "INSERT INTO members (name, email, phone, join_date) values (?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query))
+        {
+            String name = nameField.getText().trim();
+            String email = emailField.getText().trim();
+            String phone = phoneField.getText().trim();
+            java.util.Date date = new java.util.Date();
+
+            if (name.isEmpty() || email.isEmpty() || phone.isEmpty())
+            {
+                throw new Exception("Empty fields");
+            }
+
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setString(3, phone);
+            pstmt.setDate(4, new java.sql.Date(date.getTime()));
+
+            pstmt.executeUpdate();
+
+            conn.close();
+        }   
+        catch (SQLException se)
+        {
+            se.printStackTrace();
+        }   
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void removeMember()
+    {
+        String query = "REMOVE FROM members WHERE email=?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query))
+        {
+            String email = emailRemField.getText().trim();
+
+            if (email.isEmpty())
+            {
+                throw new Exception("Empty FIelds");
+            }
+
+            pstmt.setString(1, email);
+
+            pstmt.executeUpdate();
+
+            conn.close();
+        }
+        catch (SQLException se)
+        {
+            se.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 }
